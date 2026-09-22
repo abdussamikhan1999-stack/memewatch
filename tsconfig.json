@@ -30,7 +30,7 @@
       ]
     },
     "allowJs": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true
   },
   "include": [
