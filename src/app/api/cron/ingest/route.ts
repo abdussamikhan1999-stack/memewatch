@@ -42,23 +42,23 @@ export async function ingestCoin(coin: CoinRef, deps: IngestDeps): Promise<void>
       deps.fetchOnChain(coin.mintAddress),
       deps.fetchSocial(coin.symbol),
     ]);
+
+    await deps.createSnapshot({
+      coinId: coin.id,
+      priceUsd: onChain.priceUsd,
+      liquidityUsd: onChain.liquidityUsd,
+      tradeVolume24h: onChain.tradeVolume24h,
+      liquidityLocked: onChain.liquidityLocked,
+      mintAuthorityActive: onChain.mintAuthorityActive,
+      freezeAuthorityActive: onChain.freezeAuthorityActive,
+      top10HolderPct: onChain.top10HolderPct,
+      socialVolume: social.socialVolume,
+      socialSentiment: social.socialSentiment,
+    });
   } catch (err) {
     console.error(`Skipping snapshot for ${coin.symbol}:`, err);
     return;
   }
-
-  await deps.createSnapshot({
-    coinId: coin.id,
-    priceUsd: onChain.priceUsd,
-    liquidityUsd: onChain.liquidityUsd,
-    tradeVolume24h: onChain.tradeVolume24h,
-    liquidityLocked: onChain.liquidityLocked,
-    mintAuthorityActive: onChain.mintAuthorityActive,
-    freezeAuthorityActive: onChain.freezeAuthorityActive,
-    top10HolderPct: onChain.top10HolderPct,
-    socialVolume: social.socialVolume,
-    socialSentiment: social.socialSentiment,
-  });
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
