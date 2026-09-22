@@ -16,7 +16,9 @@ for the full design.
    - `DATABASE_URL` — a Postgres connection string (Supabase free tier works)
    - `BIRDEYE_API_KEY`, `LUNARCRUSH_API_KEY`, `HELIUS_API_KEY` — free-tier keys from each service
    - `CRON_SECRET` — any random string; the cron route checks this as a bearer token
-2. `npx prisma migrate dev --name init` — creates the database tables
+2. `npx prisma migrate dev --name init` — creates the database tables and
+   generates a migration file under `prisma/migrations/`; commit that
+   directory so `prisma migrate deploy` (below) has something to apply
 3. `npm run dev` — starts the app at http://localhost:3000
 4. `npm test` — runs the unit test suite (no live API keys or database required)
 
