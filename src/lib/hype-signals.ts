@@ -68,6 +68,6 @@ function pearsonCorrelation(a: number[], b: number[]): number {
   }
 
   const denominator = Math.sqrt(denomA * denomB);
-  if (denominator === 0) return 1; // ponytail: constant series are perfectly correlated
+  if (denominator === 0) return 0;
   return numerator / denominator;
 }

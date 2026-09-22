@@ -47,10 +47,15 @@ describe('socialPriceCorrelation', () => {
   });
 
   it('returns close to 1 for perfectly correlated series', () => {
-    const history = Array.from({ length: 25 }, (_, i) => point({ socialVolume: i, priceUsd: i * 2 }));
+    const history = Array.from({ length: 25 }, (_, i) => point({ socialVolume: i * i, priceUsd: 2 * i * i }));
     const correlation = socialPriceCorrelation(history);
     expect(correlation).not.toBeNull();
     expect(correlation as number).toBeGreaterThan(0.99);
+  });
+
+  it('returns 0 when one series has zero variance (flat/no signal)', () => {
+    const history = Array.from({ length: 25 }, (_, i) => point({ socialVolume: 100, priceUsd: i }));
+    expect(socialPriceCorrelation(history)).toBe(0);
   });
 
   it('returns close to 0 for uncorrelated series', () => {
