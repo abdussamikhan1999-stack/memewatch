@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ingestCoin, type IngestDeps } from '@/app/api/cron/ingest/route';
+import { ingestCoin, type IngestDeps } from '@/lib/cron-ingest';
 
 describe('ingestCoin', () => {
   it('writes a snapshot with data pulled from all three sources', async () => {
