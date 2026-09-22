@@ -25,3 +25,9 @@ for the full design.
 Deploy to Vercel and set the same environment variables in the project settings.
 `vercel.json` already schedules `/api/cron/ingest` to run every 10 minutes; Vercel
 sends the `CRON_SECRET` automatically as a bearer token when it calls scheduled routes.
+
+Before the first deploy, apply the schema to your production database:
+
+```
+DATABASE_URL="<production connection string>" npx prisma migrate deploy
+```

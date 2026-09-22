@@ -18,8 +18,9 @@ export function detectClusters(entries: TrendingEntry[], windowMs: number): Clus
   let currentGroup: TrendingEntry[] = [sorted[0]];
 
   for (let i = 1; i < sorted.length; i++) {
-    const gap = sorted[i].trendingSince.getTime() - sorted[i - 1].trendingSince.getTime();
-    if (gap <= windowMs) {
+    const gapFromPrev = sorted[i].trendingSince.getTime() - sorted[i - 1].trendingSince.getTime();
+    const spanFromGroupStart = sorted[i].trendingSince.getTime() - currentGroup[0].trendingSince.getTime();
+    if (gapFromPrev <= windowMs && spanFromGroupStart <= windowMs) {
       currentGroup.push(sorted[i]);
     } else {
       groups.push(currentGroup);

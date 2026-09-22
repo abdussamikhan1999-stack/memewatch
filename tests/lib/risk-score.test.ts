@@ -52,6 +52,26 @@ describe('computeRiskScore', () => {
     expect(result.flags.find((f) => f.label === 'Domain age')?.level).toBe('yellow');
   });
 
+  it('flags unknown deployer history as yellow with no deduction', () => {
+    const result = computeRiskScore({ ...safeInputs, deployerRugCount: null });
+    expect(result.score).toBe(100);
+    expect(result.flags.find((f) => f.label === 'Deployer history')).toEqual({
+      label: 'Deployer history',
+      level: 'yellow',
+      detail: 'Not investigated yet',
+    });
+  });
+
+  it('flags unknown wallet clustering as yellow with no deduction', () => {
+    const result = computeRiskScore({ ...safeInputs, walletClusterFlag: null });
+    expect(result.score).toBe(100);
+    expect(result.flags.find((f) => f.label === 'Wallet clustering')).toEqual({
+      label: 'Wallet clustering',
+      level: 'yellow',
+      detail: 'Not investigated yet',
+    });
+  });
+
   it('never returns a score below 0', () => {
     const result = computeRiskScore({
       liquidityLocked: false,

@@ -3,8 +3,8 @@ export interface RiskInputs {
   mintAuthorityActive: boolean;
   freezeAuthorityActive: boolean;
   top10HolderPct: number;
-  deployerRugCount: number;
-  walletClusterFlag: boolean;
+  deployerRugCount: number | null;
+  walletClusterFlag: boolean | null;
   twitterAccountAgeDays: number | null;
   domainAgeDays: number | null;
 }
@@ -71,7 +71,9 @@ export function computeRiskScore(inputs: RiskInputs): RiskResult {
     });
   }
 
-  if (inputs.deployerRugCount > 0) {
+  if (inputs.deployerRugCount === null) {
+    flags.push({ label: 'Deployer history', level: 'yellow', detail: 'Not investigated yet' });
+  } else if (inputs.deployerRugCount > 0) {
     deduction += Math.min(inputs.deployerRugCount * 15, 30);
     flags.push({
       label: 'Deployer history',
@@ -82,7 +84,9 @@ export function computeRiskScore(inputs: RiskInputs): RiskResult {
     flags.push({ label: 'Deployer history', level: 'green', detail: 'No prior rugged tokens found for this deployer' });
   }
 
-  if (inputs.walletClusterFlag) {
+  if (inputs.walletClusterFlag === null) {
+    flags.push({ label: 'Wallet clustering', level: 'yellow', detail: 'Not investigated yet' });
+  } else if (inputs.walletClusterFlag) {
     deduction += 10;
     flags.push({
       label: 'Wallet clustering',

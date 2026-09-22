@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { computeRiskScore } from '@/lib/risk-score';
-import { socialPriceCorrelation, type SnapshotPoint } from '@/lib/hype-signals';
+import { socialPriceCorrelation, detectSpike, type SnapshotPoint } from '@/lib/hype-signals';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -10,12 +10,14 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ min
   const { mintAddress } = await params;
   const coin = await db.coin.findUnique({
     where: { mintAddress },
-    include: { snapshots: { orderBy: { takenAt: 'asc' } }, osint: true },
+    include: { snapshots: { orderBy: { takenAt: 'desc' }, take: 200 }, osint: true },
   });
 
   if (!coin || coin.snapshots.length === 0) {
     notFound();
   }
+
+  coin.snapshots.reverse(); // back to ascending order for the rest of this function
 
   const latest = coin.snapshots[coin.snapshots.length - 1];
   const { score, flags } = computeRiskScore({
@@ -23,8 +25,8 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ min
     mintAuthorityActive: latest.mintAuthorityActive,
     freezeAuthorityActive: latest.freezeAuthorityActive,
     top10HolderPct: latest.top10HolderPct,
-    deployerRugCount: coin.osint?.deployerRugCount ?? 0,
-    walletClusterFlag: coin.osint?.walletClusterFlag ?? false,
+    deployerRugCount: coin.osint?.deployerRugCount ?? null,
+    walletClusterFlag: coin.osint?.walletClusterFlag ?? null,
     twitterAccountAgeDays: coin.osint?.twitterAccountAgeDays ?? null,
     domainAgeDays: coin.osint?.domainAgeDays ?? null,
   });
@@ -36,6 +38,7 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ min
     priceUsd: s.priceUsd,
   }));
   const correlation = socialPriceCorrelation(history);
+  const spike = detectSpike(history);
 
   return (
     <main>
@@ -50,6 +53,16 @@ export default async function CoinDetailPage({ params }: { params: Promise<{ min
           </li>
         ))}
       </ul>
+
+      {(spike.social || spike.volume) && (
+        <p>
+          🔺 Spike detected:
+          {spike.social ? ' social volume up sharply' : ''}
+          {spike.social && spike.volume ? ' and' : ''}
+          {spike.volume ? ' trade volume up sharply' : ''}
+          {' '}vs. its recent trailing average.
+        </p>
+      )}
 
       <h2>Hype vs. price</h2>
       <p>

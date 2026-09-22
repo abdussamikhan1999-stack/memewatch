@@ -23,8 +23,8 @@ async function getTrendingCoins(): Promise<CoinWithLatestSnapshot[]> {
         mintAuthorityActive: snap.mintAuthorityActive,
         freezeAuthorityActive: snap.freezeAuthorityActive,
         top10HolderPct: snap.top10HolderPct,
-        deployerRugCount: c.osint?.deployerRugCount ?? 0,
-        walletClusterFlag: c.osint?.walletClusterFlag ?? false,
+        deployerRugCount: c.osint?.deployerRugCount ?? null,
+        walletClusterFlag: c.osint?.walletClusterFlag ?? null,
         twitterAccountAgeDays: c.osint?.twitterAccountAgeDays ?? null,
         domainAgeDays: c.osint?.domainAgeDays ?? null,
       });
