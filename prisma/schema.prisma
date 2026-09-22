@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Coin {
+  id             String         @id @default(cuid())
+  mintAddress    String         @unique
+  symbol         String
+  name           String
+  deployerWallet String
+  discoveredAt   DateTime       @default(now())
+  trendingSince  DateTime       @default(now())
+  websiteUrl     String?
+  twitterHandle  String?
+  snapshots      Snapshot[]
+  osint          OsintProfile?
+
+  @@index([trendingSince])
+}
+
+model Snapshot {
+  id                    String   @id @default(cuid())
+  coinId                String
+  coin                  Coin     @relation(fields: [coinId], references: [id])
+  takenAt               DateTime @default(now())
+  priceUsd              Float
+  liquidityUsd          Float
+  liquidityLocked       Boolean
+  mintAuthorityActive   Boolean
+  freezeAuthorityActive Boolean
+  top10HolderPct        Float
+  socialVolume          Int
+  socialSentiment       Float
+  tradeVolume24h        Float
+
+  @@index([coinId, takenAt])
+}
+
+model OsintProfile {
+  id                    String   @id @default(cuid())
+  coinId                String   @unique
+  coin                  Coin     @relation(fields: [coinId], references: [id])
+  deployerPriorLaunches Int
+  deployerRugCount      Int
+  walletClusterFlag     Boolean
+  twitterAccountAgeDays Int?
+  domainAgeDays         Int?
+  refreshedAt           DateTime @default(now())
+}
