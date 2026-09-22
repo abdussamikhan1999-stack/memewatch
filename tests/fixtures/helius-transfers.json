@@ -1,0 +1,5 @@
+[
+  { "source": "DeployerWalletXXXXXXXXXXXXXXXXXXXXXXXXXXX", "destination": "HolderWalletAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "amount": 5000000 },
+  { "source": "DeployerWalletXXXXXXXXXXXXXXXXXXXXXXXXXXX", "destination": "HolderWalletBBBBBBBBBBBBBBBBBBBBBBBBBBBB", "amount": 3000000 },
+  { "source": "SomeUnrelatedWalletYYYYYYYYYYYYYYYYYYYYYYY", "destination": "HolderWalletCCCCCCCCCCCCCCCCCCCCCCCCCCCC", "amount": 1000000 }
+]
