@@ -1,0 +1,14 @@
+{
+  "data": {
+    "address": "So11111111111111111111111111111111111111",
+    "symbol": "TESTCOIN",
+    "name": "Test Coin",
+    "price": 0.00042,
+    "liquidity": 15000.5,
+    "v24hUSD": 82000,
+    "mintAuthority": null,
+    "freezeAuthority": "SomeAuthorityAddressXXXXXXXXXXXXXXXXXXXXX",
+    "lpBurned": true,
+    "top10HolderPercent": 34.2
+  }
+}
