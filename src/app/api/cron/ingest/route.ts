@@ -4,7 +4,9 @@ import { ingestCoin, liveDeps } from '@/lib/cron-ingest';
 
 export async function GET(request: Request): Promise<NextResponse> {
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  // Fail closed: with no secret configured, `Bearer undefined` must not authorize anyone.
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
