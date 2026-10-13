@@ -15,10 +15,12 @@ for the full design.
 1. Copy `.env.example` to `.env` and fill in:
    - `DATABASE_URL` — a Postgres connection string (Supabase free tier works)
    - `BIRDEYE_API_KEY`, `LUNARCRUSH_API_KEY`, `HELIUS_API_KEY` — free-tier keys from each service
-   - `CRON_SECRET` — any random string; the cron route checks this as a bearer token
-2. `npx prisma migrate dev --name init` — creates the database tables and
-   generates a migration file under `prisma/migrations/`; commit that
-   directory so `prisma migrate deploy` (below) has something to apply
+   - `CRON_SECRET` — any random string, required; the cron route checks this as a bearer token and rejects every request if it is unset
+2. `npx prisma migrate dev` — applies the committed migrations in
+   `prisma/migrations/` to your database. After you change
+   `prisma/schema.prisma`, run `npx prisma migrate dev --name <what-changed>`
+   and commit the new directory it creates, so `prisma migrate deploy`
+   (below) applies it in production
 3. `npm run dev` — starts the app at http://localhost:3000
 4. `npm test` — runs the unit test suite (no live API keys or database required)
 
